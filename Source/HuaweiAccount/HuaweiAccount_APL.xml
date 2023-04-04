@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+    <init>
+		<log text="Huawei Account Initialization"/>
+		<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiAccount.HuaweiAccountSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>
+	</init>
+
+    <buildscriptGradleAdditions>
+        <log text="Huawei Account Configure HMS Core SDK"/>
+        <insert>
+            repositories {
+                google()
+                jcenter()
+                // Configure the Maven repository address for the HMS Core SDK.
+                maven {url 'https://developer.huawei.com/repo/'}
+            }
+        </insert>
+        <insert>
+            dependencies {
+                // Add the AppGallery Connect plugin configuration. You are advised to use the latest plugin version.
+                classpath 'com.huawei.agconnect:agcp:1.6.0.300'
+            }
+        </insert>
+    </buildscriptGradleAdditions>
+
+    <baseBuildGradleAdditions>
+        <log text="Huawei Account Configure HMS maven repository address"/>
+        <insert>
+            allprojects {
+                repositories {
+                    google()
+                    jcenter()
+                    // Configure the Maven repository address for the HMS Core SDK.
+                    maven {url 'https://developer.huawei.com/repo/'}
+                }
+            }
+        </insert>     
+    </baseBuildGradleAdditions>
+
+    <buildGradleAdditions>
+        <log text="Huawei Account Configure Account dependencies"/>
+        <insert>
+            dependencies {
+                implementation 'com.huawei.hms:hwid:6.4.0.301'
+            }
+        </insert>
+        <insert>
+            apply plugin: 'com.huawei.agconnect'
+        </insert>
+    </buildGradleAdditions>
+
+    <proguardAdditions>
+        <log text="Huawei Account Configure Obfuscation Scripts"/>
+        <insert>
+            -ignorewarnings
+            -keepattributes *Annotation*
+            -keepattributes Exceptions
+            -keepattributes InnerClasses
+            -keepattributes Signature
+            -keepattributes SourceFile,LineNumberTable
+            -keep class com.huawei.hianalytics.**{*;}
+            -keep class com.huawei.updatesdk.**{*;}
+            -keep class com.huawei.hms.**{*;}
+        </insert>
+    </proguardAdditions>
+
+    <prebuildCopies>
+        <log text="Huawei Account Configure external Java class and AGC json file"/>
+		<copyDir src="$S(PluginDir)/External" dst="$S(BuildDir)/src"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/debug/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/release/agconnect-services.json"/>
+	</prebuildCopies>
+
+    <gameActivityImportAdditions>
+        <log text="Huawei Account Import classes"/>
+        <insert>
+            <![CDATA[
+                import com.huawei.accountplugin.*;
+                import com.huawei.hms.support.account.result.AuthAccount;
+                import org.json.JSONException;
+                import org.json.JSONObject;
+            ]]>
+        </insert>
+    </gameActivityImportAdditions>
+
+    <gameActivityClassAdditions>
+        <log text="Huawei Account Configure Java code"/>
+        <insert>
+            <![CDATA[
+                public void HuaweiAccount_Login_Without_Verification() {
+                    HuaweiAccountPlugin.loginWithoutVerification();
+                }
+
+                public void HuaweiAccount_Login_With_Id_Token() {
+                    HuaweiAccountPlugin.loginWithIdToken();
+                }
+
+                public void HuaweiAccount_Login_With_Authorization_Code() {
+                    HuaweiAccountPlugin.loginWithAuthorizationCode();
+                }
+
+                public void HuaweiAccount_Logout() {
+                    HuaweiAccountPlugin.logOut();
+                }
+
+                public void HuaweiAccount_CancelAuthorization() {
+                    HuaweiAccountPlugin.cancelAuthorization();
+                }
+
+                private String convertToAccountJson(AuthAccount account) {
+				
+				    JSONArray array = new JSONArray();
+					
+                    try {
+					    JSONObject accountJson = new JSONObject();
+						
+                        accountJson.put("displayName", account.getDisplayName());
+                        accountJson.put("avatarUriString", account.getAvatarUriString());
+                        accountJson.put("email", account.getEmail());
+                        accountJson.put("openId", account.getOpenId());
+                        accountJson.put("unionId", account.getUnionId());
+						
+                        array.put(accountJson);
+						
+                    } catch (Exception e) {
+                        nativeOnException(Constants.LOGIN_ACTION, "Failed to parse data");
+                    }
+                    return array.toString();
+                }
+
+                // Native C++ functions
+                public native void nativeOnLoggedIn(String account);
+                public native void nativeOnGetIdToken(String idToken, String account);
+                public native void nativeOnGetAuthCode(String authCode, String account);
+                public native void nativeOnLoggedOut();
+                public native void nativeOnCancelledAuth();
+                public native void nativeOnAccountException(int action, String message);
+            ]]>
+        </insert>
+    </gameActivityClassAdditions>
+
+    <gameActivityOnCreateAdditions>
+        <log text="Huawei Account Configure initialize code"/>
+        <insert>
+            <![CDATA[
+                HuaweiAccountPlugin.initialize(this, new HuaweiAccountListener() {
+                    @Override
+                    public void onLoggedIn(AuthAccount account) {
+                        nativeOnLoggedIn(convertToAccountJson(account));
+                    }
+
+                    @Override
+                    public void onGetIdToken(AuthAccount account) {
+                        nativeOnGetIdToken(account.getIdToken(), convertToAccountJson(account));
+                    }
+                    
+                    @Override
+                    public void onGetAuthCode(AuthAccount account) {
+                        nativeOnGetAuthCode(account.getAuthorizationCode(), convertToAccountJson(account));
+                    }
+
+                    @Override
+                    public void onLoggedOut() {
+                        nativeOnLoggedOut();
+                    }
+
+                    @Override
+                    public void onCancelledAuth() {
+                        nativeOnCancelledAuth();
+                    }
+
+                    @Override
+                    public void onException(int action, String message) {
+                        nativeOnAccountException(action, message);
+                    }
+                });         
+            ]]>
+        </insert>
+    </gameActivityOnCreateAdditions>
+
+    <gameActivityOnActivityResultAdditions>
+        <log text="Huawei Account Configure OnActivityResult"/>
+        <insert>
+            <![CDATA[
+                HuaweiAccountPlugin.registerOnActivityResult(requestCode, resultCode, data);
+            ]]>
+        </insert>
+    </gameActivityOnActivityResultAdditions>
+</root>

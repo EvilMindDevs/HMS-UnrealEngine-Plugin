@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+    <init>
+		<log text="Huawei IAP Initialization"/>
+		<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiIAP.HuaweiIapSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>
+        <setStringFromProperty result="IAP_PUBLIC_KEY" ini="Engine" section="/Script/HuaweiIAP.HuaweiIapSettings" property="HuaweiIAPPublicKey" default=""/>
+	</init>
+
+    <buildscriptGradleAdditions>
+        <log text="Huawei IAP Configure HMS Core SDK"/>
+        <insert>
+            repositories {
+                google()
+                jcenter()
+                // Configure the Maven repository address for the HMS Core SDK.
+                maven {url 'https://developer.huawei.com/repo/'}
+            }
+        </insert>
+        <insert>
+            dependencies {
+                // Add the AppGallery Connect plugin configuration. You are advised to use the latest plugin version.
+                classpath 'com.huawei.agconnect:agcp:1.6.0.300'
+            }
+        </insert>
+    </buildscriptGradleAdditions>
+
+    <baseBuildGradleAdditions>
+        <log text="Huawei IAP Configure HMS maven repository address"/>
+        <insert>
+            allprojects {
+                repositories {
+                    google()
+                    jcenter()
+                    // Configure the Maven repository address for the HMS Core SDK.
+                    maven {url 'https://developer.huawei.com/repo/'}
+                }
+            }
+        </insert>     
+    </baseBuildGradleAdditions>
+
+    <buildGradleAdditions>
+        <log text="Huawei IAP Configure IAP dependencies"/>
+        <insert>
+            dependencies {
+                implementation 'com.huawei.hms:iap:6.4.0.301'
+            }
+        </insert>
+        <insert>
+            apply plugin: 'com.huawei.agconnect'
+        </insert>
+    </buildGradleAdditions>
+
+    <proguardAdditions>
+        <log text="Huawei IAP Configure Obfuscation Scripts"/>
+        <insert>
+            -ignorewarnings
+            -keepattributes *Annotation*
+            -keepattributes Exceptions
+            -keepattributes InnerClasses
+            -keepattributes Signature
+            -keepattributes SourceFile,LineNumberTable
+            -keep class com.huawei.hianalytics.**{*;}
+            -keep class com.huawei.updatesdk.**{*;}
+            -keep class com.huawei.hms.**{*;}
+        </insert>
+    </proguardAdditions>
+
+    <prebuildCopies>
+        <log text="Huawei IAP Configure external Java class and AGC json file"/>
+		<copyDir src="$S(PluginDir)/External" dst="$S(BuildDir)/src"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/debug/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/release/agconnect-services.json"/>
+	</prebuildCopies>
+
+    <gameActivityImportAdditions>
+        <log text="Huawei IAP Import classes"/>
+        <insert>
+            <![CDATA[
+                import com.huawei.iapplugin.*;
+                import com.huawei.hms.iap.entity.InAppPurchaseData;
+                import com.huawei.hms.iap.entity.ProductInfo;
+                import org.json.JSONArray;
+                import org.json.JSONException;
+                import org.json.JSONObject;
+            ]]>
+        </insert>
+    </gameActivityImportAdditions>
+
+    <gameActivityClassAdditions>
+        <log text="Huawei IAP Configure Java code"/>
+        <insert>
+            <![CDATA[
+                public void HuaweiIap_Check_Environment() {
+                    HuaweiIapPlugin.checkEnvironment();        
+                }
+				
+				public void HuaweiIap_ManageSubscriptions() {
+                    HuaweiIapPlugin.manageSubscriptions();        
+                }
+				
+				public void HuaweiIap_ShowSubscription(String productId) {
+                    HuaweiIapPlugin.showSubscription(productId);        
+                }
+
+                public void HuaweiIap_Query_Products(String[] productIds, int type) {
+                    HuaweiIapPlugin.queryProducts(productIds, type);
+                }                
+
+                public void HuaweiIap_Query_Purchases(int type) {
+                    HuaweiIapPlugin.queryPurchases(type);
+                }
+
+                public void HuaweiIap_Buy_Product(String productId, int type) {
+                    HuaweiIapPlugin.buyProduct(productId, type);
+                }
+
+                public void HuaweiIAP_Get_PurchaseRecords(int type) {
+                    HuaweiIapPlugin.getPurchasedRecords(type);   
+                }
+
+                private String convertToIAPDataJSon(List<InAppPurchaseData> dataList, int action) {
+                    JSONArray array = new JSONArray();
+                    try {
+                        for (InAppPurchaseData data: dataList) {
+                            JSONObject item = new JSONObject();
+                            item.put("accountFlag", data.getAccountFlag());
+                            item.put("appInfo", data.getAppInfo());
+                            item.put("applicationId", data.getApplicationId());
+                            item.put("cancelledSubKeepDays", data.getCancelledSubKeepDays());
+                            item.put("cancellationTime", data.getCancellationTime());
+                            item.put("cancelReason", data.getCancelReason());
+                            item.put("cancelTime", data.getCancelTime());
+                            item.put("cancelWay", data.getCancelWay());
+                            item.put("consumptionState", data.getConsumptionState());
+                            item.put("country", data.getCountry());
+                            item.put("currency", data.getCurrency());
+                            item.put("daysLasted", data.getDaysLasted());
+                            item.put("deferFlag", data.getDeferFlag());
+                            item.put("developerChallenge", data.getDeveloperChallenge());
+                            item.put("developerPayload", data.getDeveloperPayload());
+                            item.put("expirationDate", data.getExpirationDate());
+                            item.put("expirationIntent", data.getExpirationIntent());
+                            item.put("graceExpirationTime", data.getGraceExpirationTime());
+                            item.put("introductoryFlag", data.getIntroductoryFlag());
+                            item.put("kind", data.getKind());
+                            item.put("lastOrderId", data.getLastOrderId());
+                            item.put("notifyClosed", data.getNotifyClosed());
+                            item.put("numOfDiscount", data.getNumOfDiscount());
+                            item.put("numOfPeriods", data.getNumOfPeriods());
+                            item.put("orderID", data.getOrderID());
+                            item.put("oriPurchaseTime", data.getOriPurchaseTime());
+                            item.put("oriSubscriptionId", data.getOriSubscriptionId());
+                            item.put("packageName", data.getPackageName());
+                            item.put("payOrderId", data.getPayOrderId());
+                            item.put("payType", data.getPayType());
+                            item.put("price", data.getPrice());
+                            item.put("priceConsentStatus", data.getPriceConsentStatus());
+                            item.put("productGroup", data.getProductGroup());
+                            item.put("productId", data.getProductId());
+                            item.put("productName", data.getProductName());
+                            item.put("purchaseState", data.getPurchaseState());
+                            item.put("purchaseTime", data.getPurchaseTime());
+                            item.put("purchaseToken", data.getPurchaseToken());
+                            item.put("purchaseType", data.getPurchaseType());
+                            item.put("quantity", data.getQuantity());
+                            item.put("renewPrice", data.getRenewPrice());
+                            item.put("renewStatus", data.getRenewStatus());
+                            item.put("resumeTime", data.getResumeTime());
+                            item.put("retryFlag", data.getRetryFlag());
+                            item.put("subscriptionId", data.getSubscriptionId());
+                            item.put("trialFlag", data.getTrialFlag());
+                            item.put("isAutoRenewing", data.isAutoRenewing());
+                            item.put("isSubValid", data.isSubValid());
+                            array.put(item);
+                        }
+                    }   catch (Exception ex) {
+                        nativeOnException(action, "Failed to parse data");    
+                    }
+                    return array.toString();
+                }
+
+                //Native C++ functions
+                public native void nativeOnCheckEnvironmentSuccess();
+                public native void nativeOnException(int action, String message);
+                public native void nativeOnObtainProductList(String productsData, int type);
+                public native void nativeOnPurchaseSuccess(String productId, int type);
+                public native void nativeOnObtainPurchases(String purchasedProductsData, String nonPurchasedProductsData, int type);
+                public native void nativeOnObtainPurchasedRecords(String purchasedProductsData, int type);
+            ]]>
+        </insert>
+    </gameActivityClassAdditions>
+
+    <gameActivityOnCreateAdditions>
+        <log text="Huawei IAP Configure initialize code"/>
+        <insert>
+            <![CDATA[
+                HuaweiIapPlugin.initialize(this, new HuaweiIapListener() {
+                    @Override
+                    public void onCheckEnvironmentSuccess() {
+                        nativeOnCheckEnvironmentSuccess();        
+                    }
+
+                    @Override
+                    public void onException(int action, String message) {
+                        nativeOnException(action, message);
+                    }
+
+                    @Override
+                    public void onObtainProductList(List<ProductInfo> products, int type) {
+                        JSONArray array = new JSONArray();
+                        try {
+                            for (ProductInfo product : products) {
+                                JSONObject item = new JSONObject();
+                                item.put("currency", product.getCurrency());
+                                item.put("mircrosPrice", product.getMicrosPrice());
+                                item.put("offerUsedStatus", product.getOfferUsedStatus());
+                                item.put("originalLocalPrice", product.getOriginalLocalPrice());
+                                item.put("originalMicroPrice", product.getOriginalMicroPrice());
+                                item.put("price", product.getPrice());
+                                item.put("priceType", product.getPriceType());
+                                item.put("productDesc", product.getProductDesc());
+                                item.put("productId", product.getProductId());
+                                item.put("productName", product.getProductName());
+                                item.put("status", product.getStatus());
+                                item.put("subFreeTrialPeriod", product.getSubFreeTrialPeriod());
+								item.put("subGroupId", product.getSubGroupId());
+                                item.put("subGroupTitle", product.getSubGroupTitle());
+                                item.put("subPeriod", product.getSubPeriod());
+                                item.put("subProductLevel", product.getSubProductLevel());
+                                item.put("subSpecialPeriod", product.getSubSpecialPeriod());
+                                item.put("subSpecialPeriodCycles", product.getSubSpecialPeriodCycles());
+                                item.put("subSpecialPrice", product.getSubSpecialPrice());
+                                item.put("subSpecialPriceMicros", product.getSubSpecialPriceMicros());
+                                array.put(item);
+                            }
+                            nativeOnObtainProductList(array.toString(), type);
+                        } catch (JSONException ex) {
+                            nativeOnException(HuaweiIapPlugin.QUERY_PURCHASES, "Failed to parse data");
+                        }
+                    }
+
+                    @Override
+                    public void onPurchaseSuccess(String productId, int type) {
+                        nativeOnPurchaseSuccess(productId, type);    
+                    }
+
+                    @Override
+                    public void onObtainPurchases(List<InAppPurchaseData> purchasedProducts, List<InAppPurchaseData> nonPurchasedProducts, int type) {
+                        String purchasedProductsData = convertToIAPDataJSon(purchasedProducts, HuaweiIapPlugin.QUERY_PURCHASES);
+                        String nonPurchasedProductsData = convertToIAPDataJSon(nonPurchasedProducts, HuaweiIapPlugin.QUERY_PURCHASES);
+                        nativeOnObtainPurchases(purchasedProductsData, nonPurchasedProductsData, type);
+                    }
+
+                    @Override
+                    public void onObtainPurchasedRecords(List<InAppPurchaseData> purchasedProducts, int type) {
+                        String purchasedProductsData = convertToIAPDataJSon(purchasedProducts, HuaweiIapPlugin.GET_PURCHASES_RECORDS);
+                        nativeOnObtainPurchasedRecords(purchasedProductsData, type);     
+                    }
+                });
+                
+                HuaweiIapPlugin.setPublicKey("IAP_PUBLIC_KEY"); 
+            ]]>
+        </insert>
+        <replace find="IAP_PUBLIC_KEY" with="$S(IAP_PUBLIC_KEY)"/>
+    </gameActivityOnCreateAdditions>
+
+    <gameActivityOnActivityResultAdditions>
+        <log text="Huawei IAP Configure OnActivityResult"/>
+        <insert>
+            <![CDATA[
+                HuaweiIapPlugin.registerOnActivityResult(requestCode, resultCode, data);
+            ]]>
+        </insert>
+    </gameActivityOnActivityResultAdditions>
+</root>

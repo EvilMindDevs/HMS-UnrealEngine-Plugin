@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+    <init>
+		<log text="Huawei Ads Initialization"/>
+		<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiAds.HuaweiAdsSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>
+	</init>
+
+  <gradleProperties>
+    <insert>
+      android.useAndroidX=true
+      android.enableJetifier=true
+    </insert>
+  </gradleProperties>
+  
+    <buildscriptGradleAdditions>
+        <log text="Huawei Ads Configure HMS Core SDK"/>
+        <insert>
+            repositories {
+                google()
+                jcenter()
+                // Configure the Maven repository address for the HMS Core SDK.
+                maven {url 'https://developer.huawei.com/repo/'}
+            }
+        </insert>
+        <insert>
+            dependencies {
+                // Add the AppGallery Connect plugin configuration. You are advised to use the latest plugin version.
+                classpath 'com.huawei.agconnect:agcp:1.6.0.300'
+            }
+        </insert>
+    </buildscriptGradleAdditions>
+
+    <baseBuildGradleAdditions>
+        <log text="Huawei Ads Configure HMS maven repository address"/>
+        <insert>
+            allprojects {
+                repositories {
+                    google()
+                    jcenter()
+                    // Configure the Maven repository address for the HMS Core SDK.
+                    maven {url 'https://developer.huawei.com/repo/'}
+                }
+            }
+        </insert>     
+    </baseBuildGradleAdditions>
+
+    <buildGradleAdditions>
+        <log text="Huawei Ads Configure Ads dependencies"/>
+        <insert>
+            dependencies {
+                implementation 'com.huawei.hms:ads-prime:3.4.61.304'
+                implementation 'com.huawei.hms:ads-omsdk:1.3.35'
+            }
+        </insert>
+        <insert>
+            apply plugin: 'com.huawei.agconnect'
+        </insert>
+    </buildGradleAdditions>
+
+    <proguardAdditions>
+        <log text="Huawei Ads Configure Obfuscation Scripts"/>
+        <insert>
+            -keep class com.huawei.openalliance.ad.** { *; }
+            -keep class com.huawei.hms.ads.** { *; }
+        </insert>
+    </proguardAdditions>
+
+    <prebuildCopies>
+        <log text="Huawei Ads Configure external Java class and AGC json file"/>
+		<copyDir src="$S(PluginDir)/External" dst="$S(BuildDir)/src"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/debug/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/release/agconnect-services.json"/>
+	</prebuildCopies>
+
+    <gameActivityImportAdditions>
+        <log text="Huawei Ads Import classes"/>
+        <insert>
+            <![CDATA[
+                import com.huawei.adplugin.*;
+                import com.huawei.adplugin.adlistener.*;
+                import com.huawei.hms.ads.*;
+            ]]>
+        </insert>
+    </gameActivityImportAdditions>
+
+    <gameActivityClassAdditions>
+        <log text="Huawei Ads Configure Java code"/>
+        <insert>
+            <![CDATA[
+                public void HuaweiAds_LoadBannerAd(String adId, int position, String size) {
+                    HuaweiAdsPlugin.loadBannerAd(adId, position, size, new IAdStatusListener() {
+                        @Override
+                        public void onAdClosed() {
+                            nativeOnBannerAdClosed();
+                        }
+        
+                        @Override
+                        public void onAdFailed(int errorCode) {
+                            nativeOnBannerAdFailed(errorCode);
+                        }
+        
+                        @Override
+                        public void onAdLeftApp() {
+                            nativeOnBannerAdLeftApp();
+                        }
+        
+                        @Override
+                        public void onAdOpened() {
+                            nativeOnBannerAdOpened();
+                        }
+        
+                        @Override
+                        public void onAdLoaded() {
+                            nativeOnBannerAdLoaded();
+                        }
+        
+                        @Override
+                        public void onAdClicked() {
+                            nativeOnBannerAdClicked();   
+                        }
+        
+                        @Override
+                        public void onAdImpression() {
+                            nativeOnBannerAdImpression();    
+                        }
+                    });
+                }
+                
+                public void HuaweiAds_ShowBannerAd() {
+                    HuaweiAdsPlugin.showBannerAd();
+                }    
+
+                public void HuaweiAds_HideBannerAd() {
+                    HuaweiAdsPlugin.hideBannerAd();
+                }
+
+                public void HuaweiAds_DestroyBannerAd() {
+                    HuaweiAdsPlugin.destroyBannerAd();
+                }
+
+                public void HuaweiAds_LoadInterstitialAd(String adId) {
+                    HuaweiAdsPlugin.loadInterstitialAd(adId, new IAdStatusListener() {
+                        @Override
+                        public void onAdClosed() {
+                            nativeOnInterstitialAdClosed();
+                        }
+            
+                        @Override
+                        public void onAdFailed(int errorCode) {
+                            nativeOnInterstitialAdFailed(errorCode);
+                        }
+            
+                        @Override
+                        public void onAdLeftApp() {
+                            nativeOnInterstitialAdLeftApp();
+                        }
+            
+                        @Override
+                        public void onAdOpened() {
+                            nativeOnInterstitialAdOpened();
+                        }
+            
+                        @Override
+                        public void onAdLoaded() {
+                            nativeOnInterstitialAdLoaded();
+                        }
+            
+                        @Override
+                        public void onAdClicked() {
+                            nativeOnInterstitialAdClicked();
+                        }
+            
+                        @Override
+                        public void onAdImpression() {
+                            nativeOnInterstitialAdImpression();     
+                        }
+                    });
+                }
+
+                public void HuaweiAds_ShowInterstitialAd() {
+                    HuaweiAdsPlugin.showInterstitialAd();
+                }
+
+                public void HuaweiAds_LoadRewardAd(String adId) {
+                    HuaweiAdsPlugin.loadRewardAd(
+                        adId, 
+                        new IRewardAdLoadListener() {
+                            @Override
+                            public void onRewardAdFailedToLoad(final int errorCode) {
+                                nativeOnRewardAdFailedToLoad(errorCode);
+                            }
+                
+                            @Override
+                            public void onRewardedLoaded() {
+                                nativeOnRewardedLoaded();      
+                            }
+                        },
+                        getRewardAdStatusListener()
+                    );    
+                }
+
+                public void HuaweiAds_ShowRewardAd() {
+                    HuaweiAdsPlugin.showRewardAd(getRewardAdStatusListener());
+                }
+
+                private IRewardAdStatusListener getRewardAdStatusListener() {
+                    return new IRewardAdStatusListener() {
+                        @Override
+                        public void onRewardAdFailedToLoad(int errorCode) {
+                            nativeOnRewardAdFailedToLoad(errorCode);
+                        }    
+
+                        @Override
+                        public void onRewardedLoaded() {
+                            nativeOnRewardedLoaded();
+                        }
+
+                        @Override
+                        public void onRewardAdClosed() {
+                            nativeOnRewardAdClosed();
+                        }
+                            
+                        @Override
+                        public void onRewardAdFailedToShow(int errorCode) {
+                            nativeOnRewardAdFailedToShow(errorCode);
+                        } 
+                        
+                        @Override
+                        public void onRewardAdOpened() {
+                            nativeOnRewardAdOpened();     
+                        }
+                        
+                        @Override
+                        public void onRewarded(String type, int amount) {
+                            nativeOnRewarded(type, amount);
+                        }
+                    };
+                }
+
+                // native C++ methods
+                public native void nativeOnBannerAdClosed();
+                public native void nativeOnBannerAdFailed(int errorCode);
+                public native void nativeOnBannerAdLeftApp();
+                public native void nativeOnBannerAdOpened();
+                public native void nativeOnBannerAdLoaded();
+                public native void nativeOnBannerAdClicked();
+                public native void nativeOnBannerAdImpression();
+                public native void nativeOnInterstitialAdClosed();
+                public native void nativeOnInterstitialAdFailed(int errorCode);
+                public native void nativeOnInterstitialAdLeftApp();
+                public native void nativeOnInterstitialAdOpened();
+                public native void nativeOnInterstitialAdLoaded();
+                public native void nativeOnInterstitialAdClicked();
+                public native void nativeOnInterstitialAdImpression();
+                public native void nativeOnRewardAdFailedToLoad(int errorCode);
+                public native void nativeOnRewardedLoaded();
+                public native void nativeOnRewardAdClosed();
+                public native void nativeOnRewardAdFailedToShow(int errorCode);
+                public native void nativeOnRewardAdOpened();
+                public native void nativeOnRewarded(String type, int amount);
+            ]]>
+        </insert>
+    </gameActivityClassAdditions>
+
+    <gameActivityOnCreateAdditions>
+        <log text="Huawei Ads Configure initialize code"/>
+        <insert>
+            <![CDATA[
+                HwAds.init(this);
+                HuaweiAdsPlugin.initialize(this);
+            ]]>
+        </insert>
+    </gameActivityOnCreateAdditions>
+
+    <gameActivityOnDestroyAdditions>
+        <log text="Huawei Ads Configure destroy code"/>
+        <insert>
+            <![CDATA[
+                HuaweiAdsPlugin.destroyBannerAd();
+            ]]>
+        </insert>
+    </gameActivityOnDestroyAdditions>    
+</root>
