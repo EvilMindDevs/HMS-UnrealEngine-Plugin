@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+  <init>
+    <log text="HuaweiUEPluginCore Initialization"/>
+    <setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiUEPluginCorePlugin.HuaweiUEPluginCoreSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>
+  </init>
+
+    <prebuildCopies>
+        <log text="Huawei IAP Configure external Java class and AGC json file"/>
+		<copyDir src="$S(PluginDir)/External" dst="$S(BuildDir)/src"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/debug/agconnect-services.json"/>
+        <copyFile src="$S(PluginDir)/../../../../$S(ConfigFile)" dst="$S(BuildDir)/gradle/app/src/release/agconnect-services.json"/>
+	</prebuildCopies>
+
+</root>

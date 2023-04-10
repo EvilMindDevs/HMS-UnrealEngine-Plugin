@@ -2,7 +2,7 @@
 <root xmlns:android="http://schemas.android.com/apk/res/android">
     <init>
 		<log text="Huawei Ads Initialization"/>
-		<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiAds.HuaweiAdsSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>
+		<!--<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiAds.HuaweiAdsSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>-->
 	</init>
 
   <gradleProperties>

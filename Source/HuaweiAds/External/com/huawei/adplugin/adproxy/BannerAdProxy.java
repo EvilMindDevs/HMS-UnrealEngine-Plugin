@@ -234,7 +234,7 @@ public class BannerAdProxy extends AdListener {
             @Override
             public void run() {
                 if (!mIsHide && mBannerView != null) {
-                    show();
+                   //show();
                 }
                 if (mAdListener != null) {
                     mAdListener.onAdLoaded();

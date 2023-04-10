@@ -71,6 +71,39 @@ public class RewardAdProxy {
         }
     }
 
+    public void loadandshow(AdParam adRequest) {
+        if (adRequest != null) {
+            mRewardAd.loadAd(adRequest, new RewardAdLoadListener() {
+                @Override
+                public void onRewardAdFailedToLoad(final int errorCode) {
+                    Log.i(TAG, "Failed to load reward ad with error code " + errorCode);
+                    super.onRewardAdFailedToLoad(errorCode);
+                    mMainThreadHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onRewardedLoaded() {
+                    Log.i(TAG, "Loaded reward ad");
+                    super.onRewardedLoaded();
+                    mMainThreadHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (mAdLoadListener != null) {
+                                mAdLoadListener.onRewardedLoaded();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     public void show() {
         mRewardAd.show();
     }
@@ -82,6 +115,7 @@ public class RewardAdProxy {
             public void onRewardAdClosed() {
                 Log.i(TAG, "Closed reward ad");
                 super.onRewardAdClosed();
+
                 mMainThreadHandler.post(new Runnable() {
                     @Override
                     public void run() {

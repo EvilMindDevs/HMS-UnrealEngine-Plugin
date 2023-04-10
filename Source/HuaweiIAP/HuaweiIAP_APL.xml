@@ -2,7 +2,7 @@
 <root xmlns:android="http://schemas.android.com/apk/res/android">
     <init>
 		<log text="Huawei IAP Initialization"/>
-		<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiIAP.HuaweiIapSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>
+		<!--<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiIAP.HuaweiIapSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>-->
         <setStringFromProperty result="IAP_PUBLIC_KEY" ini="Engine" section="/Script/HuaweiIAP.HuaweiIapSettings" property="HuaweiIAPPublicKey" default=""/>
 	</init>
 

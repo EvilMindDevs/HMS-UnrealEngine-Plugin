@@ -12,7 +12,7 @@
 	"SupportURL": "",
 	"Modules": [
 		{
-			"Name": "HuaweiIAP",
+			"Name": "HuaweiAccount",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen"
 		},
@@ -22,7 +22,7 @@
 			"LoadingPhase": "PreLoadingScreen"
 		},
 		{
-			"Name": "HuaweiAccount",
+			"Name": "HuaweiIAP",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen"
 		},
@@ -30,7 +30,15 @@
 			"Name": "HuaweiPush",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen"
+		},
+		{
+			"Name": "HuaweiUEPluginCore",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen"
 		}
 	]
 }
+
+
+
 

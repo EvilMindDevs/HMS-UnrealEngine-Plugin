@@ -203,6 +203,7 @@ public class HuaweiAdsPlugin {
         if (rewardAdProxy == null) {
             rewardAdProxy = new RewardAdProxy(mActivity, adId);
         }
+
         Log.i(TAG, "Load reward ad with id " + adId);
         AdParam adParam = new AdParam.Builder().build();
         rewardAdProxy.loadAd(adParam, new IRewardAdLoadListener() {
@@ -230,5 +231,10 @@ public class HuaweiAdsPlugin {
         if (rewardAdProxy != null && rewardAdProxy.isLoaded() && mActivity != null) {
             rewardAdProxy.show(mActivity, adStatusListener);
         }
+        else{  
+            AdParam adParam = new AdParam.Builder().build();
+            rewardAdProxy.loadandshow(adParam);
+        }
+
     }
 }

@@ -2,7 +2,7 @@
 <root xmlns:android="http://schemas.android.com/apk/res/android">
     <init>
 		<log text="Huawei Account Initialization"/>
-		<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiAccount.HuaweiAccountSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>
+		<!--<setStringFromProperty result="ConfigFile" ini="Engine" section="/Script/HuaweiAccount.HuaweiAccountSettings" property="HuaweiAGCConfig" default="Config/AGC/agconnect-services.json"/>-->
 	</init>
 
     <buildscriptGradleAdditions>
