@@ -38,7 +38,7 @@ There are 2 different options for obtaining the plugins:
 
 ## Installing the plugins
 Please refer to
-[Import the plugin into your Unity project](https://evilminddevs.gitbook.io/hms-unrealengine-plugin/getting-started/quick-start/import-the-plugin-into-your-unity-project).
+[Import the plugin into your Unreal Engine project](https://evilminddevs.gitbook.io/hms-unrealengine-plugin/getting-started/quick-start/import-the-plugin-into-your-unity-project).
 
 # Account Kit
 
