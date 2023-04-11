@@ -1,7 +1,7 @@
 # Huawei Mobile Services Plugin for Unreal Engine
-[![latestV](https://img.shields.io/github/v/release/EvilMindDevs/hms-unity-plugin?color=E10027&label=Latest%20Version&style=plastic)](https://github.com/EvilMindDevs/hms-unity-plugin/releases)
+[![latestV](https://img.shields.io/github/v/release/EvilMindDevs/HMS-UnrealEngine-Plugin?color=E10027&label=Latest%20Version&style=plastic)](https://github.com/EvilMindDevs/HMS-UnrealEngine-Plugin/releases)
 <br />
-[![Official Documentation](https://img.shields.io/badge/Documentation-9146FF?style=plastic&logo=gitbook&logoColor=white)](https://evilminddevs.gitbook.io/hms-unity-plugin/)
+[![Official Documentation](https://img.shields.io/badge/Documentation-9146FF?style=plastic&logo=gitbook&logoColor=white)](https://evilminddevs.gitbook.io/hms-unrealengine-plugin/)
 <br />
 [![Discord](https://img.shields.io/badge/Discord-7289DA?style=plastic&logo=discord&logoColor=white)](https://discord.io/hmsunityplugin)
 ## Overview
