@@ -60,8 +60,8 @@ public class BannerAdProxy extends AdListener {
 
         if(width>height)
         {
-            bannerViewWidth = (int) (width*0.55);
-            bannerViewHeight= (int) (height*0.20);
+            bannerViewWidth = (int) (width*0.605);
+            bannerViewHeight= (int) (height*0.18);
         }
         else
         {
@@ -77,14 +77,6 @@ public class BannerAdProxy extends AdListener {
     public void setAdSizeType(String adSizeType) {
         mAdSizeType = adSizeType;
     }
-
-    /*
-    public void setBannerRefresh(long interval) {
-        bannerRefresh = interval;
-        if (bannerView != null)
-            bannerView.setBannerRefresh(interval);
-    }
-    */
 
     public void loadAd(final AdParam adRequest) {
         mMainThreadHandler.post(new Runnable() {
@@ -234,7 +226,6 @@ public class BannerAdProxy extends AdListener {
             @Override
             public void run() {
                 if (!mIsHide && mBannerView != null) {
-                   //show();
                 }
                 if (mAdListener != null) {
                     mAdListener.onAdLoaded();
@@ -322,11 +313,6 @@ public class BannerAdProxy extends AdListener {
 
     private FrameLayout.LayoutParams getBannerViewLayoutParams(int width,int height) {
 
-    /*
-        final FrameLayout.LayoutParams adParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-                */
-
         final FrameLayout.LayoutParams adParams = new FrameLayout.LayoutParams(width, height);
 
         adParams.gravity = Const.BannerAdPositionCode.getLayoutGravityForPositionCode(mPositionCode);
@@ -342,11 +328,8 @@ public class BannerAdProxy extends AdListener {
                 topOffset = safeInsetTop;
             }
 
-            //adParams.leftMargin = leftOffset;
             adParams.leftMargin = 0;
-            //adParams.topMargin = topOffset;
             adParams.topMargin = (int)(mActivity.getWindow().getDecorView().getHeight()*0.06);//topOffset;
-
         } else {
             adParams.leftMargin = safeInsetLeft;
             if (mPositionCode == Const.BannerAdPositionCode.POSITION_TOP
@@ -354,41 +337,14 @@ public class BannerAdProxy extends AdListener {
                     || mPositionCode == Const.BannerAdPositionCode.POSITION_TOP_RIGHT) {
                 adParams.topMargin = safeInsetTop;
             }
+            else
+            {
+                adParams.bottomMargin = 0;
+            }
         }
         return adParams;
     }
     
-    /*
-    private FrameLayout.LayoutParams getBannerViewLayoutParams(int width,int height) {
-      Log.d(TAG,"getBannerViewLayoutParams Width:"+width+" Height:"+height);
-      final FrameLayout.LayoutParams adParams =
-              new FrameLayout.LayoutParams(width, height);
-      adParams.gravity = UnityBannerAdPositionCode.getLayoutGravityForPositionCode(positionCode);
-      int safeInsetLeft = 0;
-      int safeInsetTop = 0;//(int)(height*0.35);
-      if (positionCode == UnityBannerAdPositionCode.POSITION_CUSTOM) {
-          int leftOffset = (int) convertDpToPx(horizontalOffset);
-          if (leftOffset < safeInsetLeft) {
-              leftOffset = safeInsetLeft;
-          }
-          int topOffset = (int) convertDpToPx(verticalOffset);
-          if (topOffset < safeInsetTop) {
-              topOffset = safeInsetTop;
-          }
-          adParams.leftMargin = 0;//leftOffset;
-          adParams.topMargin = (int)(activity.getWindow().getDecorView().getHeight()*0.06);//topOffset;
-      } else {
-          adParams.leftMargin = safeInsetLeft;
-          if (positionCode == UnityBannerAdPositionCode.POSITION_TOP
-                  || positionCode == UnityBannerAdPositionCode.POSITION_TOP_LEFT
-                  || positionCode == UnityBannerAdPositionCode.POSITION_TOP_RIGHT) {
-              adParams.topMargin = safeInsetTop;
-          }
-      }
-      return adParams;
-    }
-    */
-
     private void updatePosition() {
         mMainThreadHandler.post(new Runnable() {
             @Override
