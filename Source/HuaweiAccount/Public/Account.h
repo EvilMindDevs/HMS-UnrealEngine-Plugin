@@ -35,7 +35,7 @@ namespace huawei
         virtual void onException(int action, const FString message) = 0;
     };
 
-    class Account
+    HUAWEIACCOUNT_API class Account
     {
     public:
         static void loginWithoutVerification();

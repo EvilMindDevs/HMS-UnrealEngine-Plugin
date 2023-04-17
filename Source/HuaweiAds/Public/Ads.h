@@ -58,7 +58,7 @@ namespace huawei
 		virtual void onRewarded(const FString type, int amount) = 0;
 	};
 
-	class Ads
+	class HUAWEIADS_API Ads
 	{
 	public:
 		static constexpr const char* bannerSizeToString(BannerSize size);
@@ -72,8 +72,8 @@ namespace huawei
 		static void loadRewardAd(FString adId);
 		static void showRewardAd();
 
-		static void setListener(AdsListener* listener);
+		static void setListener(AdsListener *listener);
 		static void removeListener();
-		static AdsListener* getListener();
+		static AdsListener *getListener();
 	};
 }

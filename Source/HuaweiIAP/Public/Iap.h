@@ -107,7 +107,7 @@ namespace huawei
         virtual void onObtainPurchasedRecords(const TArray<InAppPurchaseData> purchasedProductIds, int type) = 0;
     };
 
-    class Iap
+    class HUAWEIIAP_API Iap
     {
     public:
         static void checkEnvironment();

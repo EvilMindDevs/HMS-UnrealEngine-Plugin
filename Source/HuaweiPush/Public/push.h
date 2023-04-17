@@ -18,7 +18,7 @@ namespace huawei
 		virtual void onException(int errorcode, int action, const FString message) = 0;
 	};
 
-	class Push
+	class HUAWEIPUSH_API Push
 	{
 	public:
 		static void init();
