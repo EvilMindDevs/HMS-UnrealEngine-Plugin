@@ -6,6 +6,8 @@
 #include "Account.h"
 #include "AccountBlueprint.generated.h"
 
+using namespace huawei;
+
 USTRUCT(Blueprintable, BlueprintType)
 struct HUAWEIACCOUNT_API FAccountInfo
 {
@@ -40,14 +42,14 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FOnCancelAuthException, FString, message);
 
 UCLASS()
 class HUAWEIACCOUNT_API UHuaweiAccountBlueprint : public UBlueprintFunctionLibrary,
-                                                  public huawei::AccountListener
+                                                  public AccountListener
 {
     GENERATED_BODY()
 
 public:
     UHuaweiAccountBlueprint(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
     {
-        huawei::Account::setListener(this);
+        Account::setListener(this);
     };
 
     static FOnLogInSuccess _onLogInSuccess;

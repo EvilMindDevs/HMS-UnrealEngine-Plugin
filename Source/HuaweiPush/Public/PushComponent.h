@@ -4,6 +4,8 @@
 #include "push.h"
 #include "PushComponent.generated.h"
 
+using namespace huawei;
+
 #define INIT_FAILED 99
 #define UN_SUBSCRIBE_FAILED 100
 #define SUBSCRIBE_FAILED 101
@@ -25,7 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMessageReceivedException, FString
 
 UCLASS(ClassGroup = (HuaweiPushPlugin), meta = (BlueprintSpawnableComponent))
 class UPushComponent : public UActorComponent,
-                       public huawei::PushListener
+                       public PushListener
 {
     GENERATED_BODY()
 

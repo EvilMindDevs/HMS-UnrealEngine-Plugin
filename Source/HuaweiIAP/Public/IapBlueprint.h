@@ -8,6 +8,8 @@
 #include "Iap.h"
 #include "IapBlueprint.generated.h"
 
+using namespace huawei;
+
 #define CHECK_ENVIRONMENT 0
 #define QUERY_PRODUCTS 1
 #define BUY_PRODUCT 2
@@ -243,14 +245,14 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnObtainPurchasedRecords, const TArray<FInAp
 
 UCLASS()
 class HUAWEIIAP_API UHuaweiIapBlueprint : public UBlueprintFunctionLibrary,
-                                          public huawei::IapListener
+                                          public IapListener
 {
     GENERATED_BODY()
 
 public:
     UHuaweiIapBlueprint(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
     {
-        huawei::Iap::setListener(this);
+        Iap::setListener(this);
     };
 
     static FOnCheckEnvironmentSuccess _onCheckEnvironmentSuccess;
@@ -287,8 +289,8 @@ public:
 
     void onCheckEnvironmentSuccess();
     void onException(int action, const FString message);
-    void onObtainProductList(const TArray<huawei::ProductInfo> products, int type);
+    void onObtainProductList(const TArray<ProductInfo> products, int type);
     void onPurchaseSuccess(const FString productId, int type);
-    void onObtainPurchases(const TArray<huawei::InAppPurchaseData> purchasedProductDatas, const TArray<huawei::InAppPurchaseData> nonPurchasedProductDatas, int type);
-    void onObtainPurchasedRecords(const TArray<huawei::InAppPurchaseData> purchasedProductDatas, int type);
+    void onObtainPurchases(const TArray<InAppPurchaseData> purchasedProductDatas, const TArray<InAppPurchaseData> nonPurchasedProductDatas, int type);
+    void onObtainPurchasedRecords(const TArray<InAppPurchaseData> purchasedProductDatas, int type);
 };
