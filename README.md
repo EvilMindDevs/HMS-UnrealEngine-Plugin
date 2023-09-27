@@ -3,7 +3,7 @@
 <br />
 [![Official Documentation](https://img.shields.io/badge/Documentation-9146FF?style=plastic&logo=gitbook&logoColor=white)](https://evilminddevs.gitbook.io/hms-unrealengine-plugin/)
 <br />
-[![Discord](https://img.shields.io/badge/Discord-7289DA?style=plastic&logo=discord&logoColor=white)](https://discord.io/hmsunityplugin)
+[![Discord](https://img.shields.io/badge/Discord-7289DA?style=plastic&logo=discord&logoColor=white)](https://discord.gg/gAyryuM9Gd)
 ## Overview
 
 The HMS Unreal Engine plugin helps you integrate the full power of Huawei Mobile Services into your game developed with Unreal Engine.<br />Huawei kits and services that our plugin will help you to integrate:
